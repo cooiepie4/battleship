@@ -7,4 +7,19 @@ describe("Ship", () => {
     expect(ship.length).toBe(4);
     expect(ship.isSunk()).toBe(false);
   });
+
+  test("records hits correctly", () => {
+    const ship = new Ship(4);
+    ship.hit();
+    expect(ship.hits).toBe(1);
+  });
+
+  test("ship sinks correctly", () => {
+    const ship = new Ship(4);
+    ship.hit();
+    ship.hit();
+    ship.hit();
+    ship.hit();
+    expect(ship.isSunk()).toBe(true);
+  });
 });
