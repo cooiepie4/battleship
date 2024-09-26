@@ -22,6 +22,7 @@ class Gameboard {
     this.size = size;
     this.board = this.createBoard();
     this.ships = [];
+    this.ship = new Ship();
   }
 
   createBoard() {
@@ -49,10 +50,19 @@ class Gameboard {
       const r = vertical ? row + i : row;
       const c = vertical ? col : col + i;
       this.board[r][c] = 1; // or you could store the ship object itself
+      this.ships.push([r, c]);
     }
+  }
 
-    // Optionally, keep track of the ships
-    this.ships.push(ship);
+  receiveAttack(ship, row, col) {
+    for (let i = 0; i < this.ships.length; i++) {
+      if (this.ships[i][0] === row && this.ships[i][1] === col) {
+        this.board[row][col] = 0;
+        ship.hit();
+        return;
+      }
+      console.log("missed!");
+    }
   }
 }
 

@@ -48,6 +48,7 @@ describe("gameBoard", () => {
     expect(gameboard.board[0][1]).toBe(1);
     expect(gameboard.board[0][2]).toBe(1);
     expect(gameboard.board[0][3]).toBe(1);
+    expect(gameboard.board[0][4]).toBe(null);
   });
 
   test("test that ship can not overlap", () => {
@@ -66,5 +67,31 @@ describe("gameBoard", () => {
     expect(() => {
       gameboard.placeShip(ship, 10, 10, true);
     }).toThrow("Invalid placement!");
+  });
+  test("check the ships array", () => {
+    const ship = new Ship(4);
+    gameboard.placeShip(ship, 0, 0, false);
+    expect(gameboard.ships).toStrictEqual([
+      [0, 0],
+      [0, 1],
+      [0, 2],
+      [0, 3],
+    ]);
+  });
+  test("check if the ship receives an attack when hit", () => {
+    const ship = new Ship(4);
+    gameboard.placeShip(ship, 0, 0, false);
+    gameboard.receiveAttack(ship, 0, 1);
+    expect(ship.hits).toBe(1);
+  });
+
+  test("check if ship sinks when attacked enough times", () => {
+    const ship = new Ship(4);
+    gameboard.placeShip(ship, 0, 0, false);
+    gameboard.receiveAttack(ship, 0, 0);
+    gameboard.receiveAttack(ship, 0, 2);
+    gameboard.receiveAttack(ship, 0, 1);
+    gameboard.receiveAttack(ship, 0, 3);
+    expect(ship.isSunk()).toBe(true);
   });
 });
