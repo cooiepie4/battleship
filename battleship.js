@@ -57,12 +57,22 @@ class Gameboard {
   receiveAttack(ship, row, col) {
     for (let i = 0; i < this.ships.length; i++) {
       if (this.ships[i][0] === row && this.ships[i][1] === col) {
-        this.board[row][col] = 0;
         ship.hit();
         return;
       }
+      this.board[row][col] = 0;
       console.log("missed!");
     }
+  }
+
+  sunkAllShips(...ships) {
+    let allSunk = true;
+    ships.forEach((ship) => {
+      if (!ship.isSunk()) {
+        allSunk = false;
+      }
+    });
+    return allSunk;
   }
 }
 

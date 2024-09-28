@@ -94,4 +94,49 @@ describe("gameBoard", () => {
     gameboard.receiveAttack(ship, 0, 3);
     expect(ship.isSunk()).toBe(true);
   });
+  test("check if the board knows when all ships are sunk", () => {
+    // Create a mock Ship class
+    const Ship = jest.fn();
+
+    // Mock the isSunk method
+    Ship.mockImplementation(() => {
+      return {
+        isSunk: jest.fn(),
+      };
+    });
+
+    const ship1 = new Ship();
+    const ship2 = new Ship();
+
+    // Set the return values for isSunk
+    ship1.isSunk.mockReturnValue(true);
+    ship2.isSunk.mockReturnValue(true);
+
+    // Place ships on the gameboard
+    gameboard.placeShip(ship1, 0, 0, true);
+    gameboard.placeShip(ship2, 9, 0, false);
+
+    // Check if all ships are sunk
+    expect(gameboard.sunkAllShips(ship1, ship2)).toBe(true);
+  });
+  test("check if the board knows if not all ships are sunk", () => {
+    const Ship = jest.fn();
+    Ship.mockImplementation(() => {
+      return {
+        isSunk: jest.fn(),
+      };
+    });
+    const ship1 = new Ship();
+    const ship2 = new Ship();
+
+    // Set the return values for isSunk
+    ship1.isSunk.mockReturnValue(true);
+    ship2.isSunk.mockReturnValue(false);
+    // Place ships on the gameboard
+    gameboard.placeShip(ship1, 0, 0, true);
+    gameboard.placeShip(ship2, 9, 0, false);
+
+    // Check if all ships are sunk
+    expect(gameboard.sunkAllShips(ship1, ship2)).toBe(false);
+  });
 });
