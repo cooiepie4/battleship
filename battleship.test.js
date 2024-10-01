@@ -34,20 +34,20 @@ describe("gameBoard", () => {
     const ship = new Ship(4);
 
     gameboard.placeShip(ship, 0, 0, true);
-    expect(gameboard.board[0][0]).toBe(1);
-    expect(gameboard.board[1][0]).toBe(1);
-    expect(gameboard.board[2][0]).toBe(1);
-    expect(gameboard.board[3][0]).toBe(1);
+    expect(gameboard.board[0][0]).toBe(ship);
+    expect(gameboard.board[1][0]).toBe(ship);
+    expect(gameboard.board[2][0]).toBe(ship);
+    expect(gameboard.board[3][0]).toBe(ship);
   });
 
   test("test that ship is placed horizontally", () => {
     const ship = new Ship(4);
 
     gameboard.placeShip(ship, 0, 0, false);
-    expect(gameboard.board[0][0]).toBe(1);
-    expect(gameboard.board[0][1]).toBe(1);
-    expect(gameboard.board[0][2]).toBe(1);
-    expect(gameboard.board[0][3]).toBe(1);
+    expect(gameboard.board[0][0]).toBe(ship);
+    expect(gameboard.board[0][1]).toBe(ship);
+    expect(gameboard.board[0][2]).toBe(ship);
+    expect(gameboard.board[0][3]).toBe(ship);
     expect(gameboard.board[0][4]).toBe(null);
   });
 
@@ -71,27 +71,22 @@ describe("gameBoard", () => {
   test("check the ships array", () => {
     const ship = new Ship(4);
     gameboard.placeShip(ship, 0, 0, false);
-    expect(gameboard.ships).toStrictEqual([
-      [0, 0],
-      [0, 1],
-      [0, 2],
-      [0, 3],
-    ]);
+    expect(gameboard.ships).toStrictEqual([ship, ship, ship, ship]);
   });
   test("check if the ship receives an attack when hit", () => {
     const ship = new Ship(4);
     gameboard.placeShip(ship, 0, 0, false);
-    gameboard.receiveAttack(ship, 0, 1);
+    gameboard.receiveAttack(0, 1);
     expect(ship.hits).toBe(1);
   });
 
   test("check if ship sinks when attacked enough times", () => {
     const ship = new Ship(4);
     gameboard.placeShip(ship, 0, 0, false);
-    gameboard.receiveAttack(ship, 0, 0);
-    gameboard.receiveAttack(ship, 0, 2);
-    gameboard.receiveAttack(ship, 0, 1);
-    gameboard.receiveAttack(ship, 0, 3);
+    gameboard.receiveAttack(0, 0);
+    gameboard.receiveAttack(0, 2);
+    gameboard.receiveAttack(0, 1);
+    gameboard.receiveAttack(0, 3);
     expect(ship.isSunk()).toBe(true);
   });
   test("check if the board knows when all ships are sunk", () => {

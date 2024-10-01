@@ -1,4 +1,4 @@
-class Ship {
+export class Ship {
   constructor(length) {
     this.length = length;
     this.hits = 0;
@@ -9,7 +9,7 @@ class Ship {
   }
 
   isSunk() {
-    if (this.length === this.hits) {
+    if (this.hits === this.length) {
       return true;
     } else {
       return false;
@@ -17,12 +17,11 @@ class Ship {
   }
 }
 
-class Gameboard {
+export class Gameboard {
   constructor(size = 10) {
     this.size = size;
     this.board = this.createBoard();
     this.ships = [];
-    this.ship = new Ship();
   }
 
   createBoard() {
@@ -34,49 +33,42 @@ class Gameboard {
   placeShip(ship, row, col, vertical) {
     const length = ship.length;
 
-    // Check if the ship can be placed (within bounds and not overlapping)
     for (let i = 0; i < length; i++) {
       const r = vertical ? row + i : row;
       const c = vertical ? col : col + i;
 
-      // Check if out of bounds or if already occupied
       if (r >= this.size || c >= this.size || this.board[r][c] !== null) {
         throw new Error("Invalid placement!");
       }
     }
 
-    // Place the ship
     for (let i = 0; i < length; i++) {
       const r = vertical ? row + i : row;
       const c = vertical ? col : col + i;
-      this.board[r][c] = 1; // or you could store the ship object itself
-      this.ships.push([r, c]);
+      this.board[r][c] = ship;
+      this.ships.push(ship);
     }
   }
 
-  receiveAttack(ship, row, col) {
-    for (let i = 0; i < this.ships.length; i++) {
-      if (this.ships[i][0] === row && this.ships[i][1] === col) {
-        ship.hit();
-        return;
-      }
+  receiveAttack(row, col) {
+    const target = this.board[row][col];
+    if (target instanceof Ship) {
+      target.hit();
       this.board[row][col] = 0;
-      console.log("missed!");
+    } else {
+      this.board[row][col] = "M";
     }
   }
 
   sunkAllShips(...ships) {
-    let allSunk = true;
-    ships.forEach((ship) => {
-      if (!ship.isSunk()) {
-        allSunk = false;
-      }
-    });
-    return allSunk;
+    return ships.every((ship) => ship.isSunk());
   }
 }
 
-module.exports = {
-  Ship,
-  Gameboard,
-};
+export class Player {
+  constructor(name, playerType) {
+    this.name = name;
+    this.playerType = playerType;
+    this.gameboard = new Gameboard();
+  }
+}

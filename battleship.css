@@ -1,0 +1,22 @@
+.board {
+  display: grid;
+  width: 250px; /* or any width you prefer */
+  height: 250px; /* or any height you prefer */
+  border: solid black 1px;
+}
+
+.op-board {
+  display: grid;
+  width: 250px; /* or any width you prefer */
+  height: 250px; /* or any height you prefer */
+  border: solid black 1px;
+  margin-top: 20px;
+}
+
+.grid-square {
+  border: solid black 1px;
+}
+
+.ship {
+  background-color: pink;
+}
