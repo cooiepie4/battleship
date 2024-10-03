@@ -7,8 +7,53 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="board"></div>
-    <div class="op-board"></div>
+    <div class="createAShip">
+      <form action="" method="post">
+        <label for="shipLength">Ship Length: </label>
+        <select id="shipLength" name="length">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <label for="shipRow">Ship starting row: </label>
+        <select id="shipRow" name="row">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+        <label for="shipCol">Ship starting column: </label>
+        <select id="shipCol" name="col">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+        <label for="shipVert">Vertical: </label>
+        <select id="shipVert" name="vertical">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+        <button class="addShip">Add ship</button>
+      </form>
+    </div>
+    <div class="playingArea">
+      <div class="board"></div>
+      <div class="op-board"></div>
+    </div>
 
     <script type="module" src="battleshipUI.js"></script>
   </body>

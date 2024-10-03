@@ -40,6 +40,34 @@ export class Gameboard {
       if (r >= this.size || c >= this.size || this.board[r][c] !== null) {
         throw new Error("Invalid placement!");
       }
+
+      if (vertical) {
+        if (c > 0 && this.board[r][c - 1] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (c < this.size - 1 && this.board[r][c + 1] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (r > 0 && this.board[r - 1][c] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (r + length < this.size && this.board[r + length][c] !== null) {
+          throw new Error("Invalid placement!");
+        }
+      } else {
+        if (r > 0 && this.board[r - 1][c] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (r < this.size - 1 && this.board[r + 1][c] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (c > 0 && this.board[r][c - 1] !== null) {
+          throw new Error("Invalid placement!");
+        }
+        if (c + length < this.size && this.board[r][c + length] !== null) {
+          throw new Error("Invalid placement!");
+        }
+      }
     }
 
     for (let i = 0; i < length; i++) {
@@ -55,13 +83,15 @@ export class Gameboard {
     if (target instanceof Ship) {
       target.hit();
       this.board[row][col] = 0;
+      return "hit";
     } else {
       this.board[row][col] = "M";
+      return "miss";
     }
   }
 
-  sunkAllShips(...ships) {
-    return ships.every((ship) => ship.isSunk());
+  sunkAllShips() {
+    return this.ships.every((ship) => ship.isSunk());
   }
 }
 

@@ -1,8 +1,25 @@
 import { Ship, Gameboard, Player } from "./battleship.js";
 let board = document.querySelector(".board");
 let opBoard = document.querySelector(".op-board");
-const ship = new Ship(4);
-const ship1 = new Ship(4);
+let addShipButton = document.querySelector(".addShip");
+let shipLength = document.querySelector("#shipLength");
+let shipRow = document.querySelector("#shipRow");
+let shipCol = document.querySelector("#shipCol");
+let shipVert = document.querySelector("#shipVert");
+
+const shipLimits = {
+  4: 1,
+  3: 2,
+  2: 2,
+  1: 3,
+};
+
+const placedShips = {
+  4: 0,
+  3: 0,
+  2: 0,
+  1: 0,
+};
 
 const player1 = new Player("cooiepie4", "human");
 const player2 = new Player("cooiebot4", "computer");
@@ -10,17 +27,14 @@ const player2 = new Player("cooiebot4", "computer");
 const gameboard1 = player1.gameboard;
 const gameboard2 = player2.gameboard;
 
-const gameboardArray1 = gameboard1.board;
 const gameboardArray2 = gameboard2.board;
-
-gameboard1.placeShip(ship, 0, 0, false);
-gameboard2.placeShip(ship1, 0, 0, false);
+const gameboardArray1 = gameboard1.board;
 
 function populateBoard(board, size) {
   board.innerHTML = "";
   board.style.gridTemplateColumns = `repeat(${size} , 1fr)`;
   board.style.gridTemplateRows = `repeat(${size} , 1fr)`;
-
+  const gameboardArray1 = gameboard1.board;
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       const square = document.createElement("div");
@@ -51,6 +65,9 @@ function populateOpBoard(board, row, col) {
       square.dataset.col = col;
       square.addEventListener("click", (event) => {
         colorSquare.call(event.target, gameboard2, row, col);
+
+        botAttack();
+        checkWinner();
       });
       board.appendChild(square);
     }
@@ -60,10 +77,89 @@ function populateOpBoard(board, row, col) {
 populateOpBoard(opBoard, 10, 10);
 
 function colorSquare(gameboard, row, col) {
-  this.style.border = "solid red 1px";
+  this.style.backgroundColor = "red";
   gameboard.receiveAttack(parseInt(row), parseInt(col));
 }
 
-console.table(gameboardArray2);
-console.log(ship1.hits);
-console.log(ship1.isSunk());
+addShipButton.addEventListener("click", (event) => {
+  event.preventDefault();
+  const length = parseInt(shipLength.value);
+  const row = parseInt(shipRow.value);
+  const col = parseInt(shipCol.value);
+  const vertical = shipVert.value === "true"; // Check if selected option is true
+
+  console.log("Length:", length);
+  console.log("Row:", row);
+  console.log("Col:", col);
+  console.log("Vertical:", vertical);
+
+  let ship = new Ship(length);
+
+  if (placedShips[length] < shipLimits[length]) {
+    gameboard1.placeShip(ship, row, col, vertical);
+    placedShips[length]++;
+  } else {
+    console.log("reached the ship limit");
+  }
+
+  populateBoard(board, 10);
+});
+
+function placeShipsOpBoard() {
+  const ships = [
+    new Ship(4), // Destroyer
+    new Ship(3), // Mini Destroyer 1
+    new Ship(3), // Mini Destroyer 2
+    new Ship(2), // Little Boy 1
+    new Ship(2), // Little Boy 2
+    new Ship(1), // Life Boat 1
+    new Ship(1), // Life Boat 2
+    new Ship(1), // Life Boat 3
+  ];
+
+  ships.forEach((ship) => {
+    let placed = false;
+
+    while (!placed) {
+      const row = Math.floor(Math.random() * 10);
+      const col = Math.floor(Math.random() * 10);
+      const vertical = getRandomVertical();
+
+      try {
+        gameboard2.placeShip(ship, row, col, vertical);
+        placed = true; // Ship placed successfully
+      } catch (error) {
+        // Handle the error (e.g., log it or ignore it)
+        console.error("Failed to place ship:", error);
+        // Loop will retry placing the ship
+      }
+    }
+  });
+}
+function getRandomVertical() {
+  return Math.random() < 0.5;
+}
+
+function botAttack() {
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < 10; j++) {
+      if (gameboardArray1[i][j] !== "M" && gameboardArray1[i][j] !== 0) {
+        gameboard1.receiveAttack(i, j);
+        console.log(gameboardArray1);
+        return;
+      }
+    }
+  }
+}
+function checkWinner() {
+  if (gameboard1.sunkAllShips() === true) {
+    console.log("cooiebot4 won");
+  } else if (gameboard2.sunkAllShips() === true) {
+    console.log("cooipie4 won");
+  } else {
+    return;
+  }
+}
+
+placeShipsOpBoard();
+console.log(gameboardArray2);
