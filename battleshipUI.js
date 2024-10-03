@@ -34,7 +34,7 @@ function populateBoard(board, size) {
   board.innerHTML = "";
   board.style.gridTemplateColumns = `repeat(${size} , 1fr)`;
   board.style.gridTemplateRows = `repeat(${size} , 1fr)`;
-  const gameboardArray1 = gameboard1.board;
+
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       const square = document.createElement("div");
@@ -65,9 +65,6 @@ function populateOpBoard(board, row, col) {
       square.dataset.col = col;
       square.addEventListener("click", (event) => {
         colorSquare.call(event.target, gameboard2, row, col);
-
-        botAttack();
-        checkWinner();
       });
       board.appendChild(square);
     }
@@ -77,8 +74,22 @@ function populateOpBoard(board, row, col) {
 populateOpBoard(opBoard, 10, 10);
 
 function colorSquare(gameboard, row, col) {
-  this.style.backgroundColor = "red";
-  gameboard.receiveAttack(parseInt(row), parseInt(col));
+  if (
+    this.classList.contains("hitGridSquare") ||
+    this.classList.contains("missGridSquare")
+  ) {
+    return; // Exit the function if the cell has already been clicked
+  }
+  const hitStatus = gameboard.receiveAttack(parseInt(row), parseInt(col));
+  if (hitStatus) {
+    this.classList.add("hitGridSquare");
+    botAttack();
+    checkWinner();
+  } else {
+    this.classList.add("missGridSquare");
+    botAttack();
+    checkWinner();
+  }
 }
 
 addShipButton.addEventListener("click", (event) => {
@@ -141,15 +152,14 @@ function getRandomVertical() {
 }
 
 function botAttack() {
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
-      if (gameboardArray1[i][j] !== "M" && gameboardArray1[i][j] !== 0) {
-        gameboard1.receiveAttack(i, j);
-        console.log(gameboardArray1);
-        return;
-      }
-    }
-  }
+  let row, col;
+  do {
+    row = Math.floor(Math.random() * 10);
+    col = Math.floor(Math.random() * 10);
+  } while (gameboardArray1 === "M" || gameboardArray1 === "0");
+
+  const isHit = gameboard1.receiveAttack(row, col);
+  updatePlayerBoard(row, col, isHit);
 }
 function checkWinner() {
   if (gameboard1.sunkAllShips() === true) {
@@ -161,5 +171,14 @@ function checkWinner() {
   }
 }
 
+function updatePlayerBoard(row, col, isHit) {
+  const square = board.children[row * 10 + col];
+
+  if (isHit) {
+    square.classList.add("hitGridSquare");
+  } else {
+    square.classList.add("missGridSquare");
+  }
+}
 placeShipsOpBoard();
 console.log(gameboardArray2);

@@ -83,15 +83,17 @@ export class Gameboard {
     if (target instanceof Ship) {
       target.hit();
       this.board[row][col] = 0;
-      return "hit";
-    } else {
+      return true;
+    } else if (this.board[row][col] === null) {
       this.board[row][col] = "M";
-      return "miss";
+      return false;
     }
+    return false;
   }
 
   sunkAllShips() {
     return this.ships.every((ship) => ship.isSunk());
+    //every(function()) or every(() => ) returns true or false
   }
 }
 

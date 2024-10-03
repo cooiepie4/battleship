@@ -20,3 +20,13 @@
 .ship {
   background-color: pink;
 }
+
+.hitGridSquare {
+  border: solid black 1px;
+  background-color: red;
+}
+
+.missGridSquare {
+  border: solid black 1 px;
+  background-color: yellow;
+}
