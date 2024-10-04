@@ -6,7 +6,8 @@ let shipLength = document.querySelector("#shipLength");
 let shipRow = document.querySelector("#shipRow");
 let shipCol = document.querySelector("#shipCol");
 let shipVert = document.querySelector("#shipVert");
-
+let startGame = document.querySelector(".startGame");
+let createAShip = document.querySelector(".createAShip");
 const shipLimits = {
   4: 1,
   3: 2,
@@ -110,10 +111,19 @@ addShipButton.addEventListener("click", (event) => {
     gameboard1.placeShip(ship, row, col, vertical);
     placedShips[length]++;
   } else {
-    console.log("reached the ship limit");
+    alert("reached the ship limit");
   }
 
   populateBoard(board, 10);
+});
+
+startGame.addEventListener("click", () => {
+  if (!checkAllShipsPlaced()) {
+    return;
+  } else {
+    opBoard.style.display = "grid";
+    createAShip.style.display = "none";
+  }
 });
 
 function placeShipsOpBoard() {
@@ -163,9 +173,10 @@ function botAttack() {
 }
 function checkWinner() {
   if (gameboard1.sunkAllShips() === true) {
-    console.log("cooiebot4 won");
+    alert("you won");
+    opBoard.style.display = "none";
   } else if (gameboard2.sunkAllShips() === true) {
-    console.log("cooipie4 won");
+    alert("computer won");
   } else {
     return;
   }
@@ -180,5 +191,17 @@ function updatePlayerBoard(row, col, isHit) {
     square.classList.add("missGridSquare");
   }
 }
+
+function checkAllShipsPlaced() {
+  for (let i = 1; i < 5; i++) {
+    if (placedShips[i] < shipLimits[i]) {
+      alert(
+        "You must placed 1 ship with the length of 4, 2 with the length of 3, 2 with the length of 2, and 3 with the length of 1"
+      );
+      return false;
+    }
+  }
+  return true;
+}
+
 placeShipsOpBoard();
-console.log(gameboardArray2);
